@@ -146,11 +146,12 @@ namespace Com.MyCompany.MyGame
                 ProcessInputs();
             }
 
+//DISABLE FOR NOW
             // trigger Beams active state
-            if (beams != null && IsFiring != beams.activeInHierarchy)
+            /*if (beams != null && IsFiring != beams.activeInHierarchy)
             {
                 beams.SetActive(IsFiring);
-            }
+            }*/
 
             if (photonView.IsMine)
             {
