@@ -15,6 +15,7 @@ namespace Com.MyCompany.MyGame
         public static GameManager Instance;
         [Tooltip("The prefab to use for representing the player")]
         public GameObject playerPrefab;
+		public int playerJoined;
 
         #endregion
 
@@ -55,6 +56,10 @@ namespace Com.MyCompany.MyGame
                 }
             }
         }
+		private void FixedUpdate()
+		{
+			
+		}
 
         public void LeaveRoom()
         {

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using Photon.Pun;
+using System.Collections.Generic;
 
 
 namespace Com.MyCompany.MyGame
@@ -51,6 +53,12 @@ namespace Com.MyCompany.MyGame
         #endregion
 
 
+		public GameObject[] cameras;
+	
+		public List<GameObject> players;
+		
+		public PhotonView pv;
+
         #region MonoBehaviour Callbacks
 
 
@@ -64,11 +72,23 @@ namespace Com.MyCompany.MyGame
             {
                 OnStartFollowing();
             }
+			cameras = GameObject.FindGameObjectsWithTag("OtherCam");
+			//players = (GameObject.FindGameObjectsWithTag("Player"));
+			
+			foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+			{
+				pv = player.GetComponent<PhotonView>();
+				if(!pv.IsMine)
+				{
+					players.Add(player);
+				}
+			}
         }
 
 
         void LateUpdate()
         {
+			
             // The transform target may not destroy on level load,
             // so we need to cover corner cases where the Main Camera is different everytime we load a new scene, and reconnect when that happens
             if (cameraTransform == null && isFollowing)
@@ -123,6 +143,11 @@ namespace Com.MyCompany.MyGame
 
 
             cameraTransform.LookAt(this.transform.position + centerOffset);
+			
+			for(int i = 0; i < cameras.Length; i++)
+			{
+				cameras[i].transform.position = Vector3.Lerp(cameras[i].transform.position, players[i].transform.position + players[i].transform.TransformVector(cameraOffset),smoothSpeed * Time.deltaTime);
+			}
         }
 
 
@@ -136,6 +161,11 @@ namespace Com.MyCompany.MyGame
 
 
             cameraTransform.LookAt(this.transform.position + centerOffset);
+			
+			for(int i = 0; i < cameras.Length; i++)
+			{
+				cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+			}
         }
         #endregion
     }

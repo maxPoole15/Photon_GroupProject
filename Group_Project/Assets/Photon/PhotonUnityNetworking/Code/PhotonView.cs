@@ -45,6 +45,10 @@ namespace Photon.Pun
             DestroyImmediate(go); 
         }
         #endif
+		void FixedUpdate()
+		{
+		
+		}
 
         #if UNITY_EDITOR
         [ContextMenu("Open PUN Wizard")]
