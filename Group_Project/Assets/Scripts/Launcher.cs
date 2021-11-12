@@ -38,6 +38,14 @@ namespace Com.MyCompany.MyGame
         [Tooltip("The UI Label to inform the user that the connection is in progress")]
         [SerializeField]
         private GameObject progressLabel;
+        [Tooltip("The UI Label to inform the user of hints for the game")]
+        [SerializeField]
+        private GameObject hintLabel;
+
+        [SerializeField]
+        private GameObject[] hintList;
+        [SerializeField]
+        private GameObject hintDisplayed;
 
         #endregion
 
@@ -62,6 +70,7 @@ namespace Com.MyCompany.MyGame
         void Start()
         {
             progressLabel.SetActive(false);
+            hintLabel.SetActive(false);
             controlPanel.SetActive(true);
         }
 
@@ -80,7 +89,11 @@ namespace Com.MyCompany.MyGame
         public void Connect()
         {
             progressLabel.SetActive(true);
+            hintLabel.SetActive(true);
             controlPanel.SetActive(false);
+
+            hintDisplayed = hintList[Random.Range(0, hintList.Length)];
+
             if (PhotonNetwork.IsConnected)
             {
                 PhotonNetwork.JoinRandomRoom();
@@ -112,6 +125,7 @@ namespace Com.MyCompany.MyGame
         public override void OnDisconnected(DisconnectCause cause)
         {
             progressLabel.SetActive(false);
+            hintLabel.SetActive(false);
             controlPanel.SetActive(true);
             isConnecting = false;
             Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
