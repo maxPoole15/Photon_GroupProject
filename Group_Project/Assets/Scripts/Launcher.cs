@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -17,7 +18,7 @@ namespace Com.MyCompany.MyGame
 
         #endregion
 
-
+         
         #region Private Fields
 
 
@@ -42,10 +43,9 @@ namespace Com.MyCompany.MyGame
         [SerializeField]
         private GameObject hintLabel;
 
+        private string[] hintList = new string[4];
         [SerializeField]
-        private GameObject[] hintList;
-        [SerializeField]
-        private GameObject hintDisplayed;
+        private Text hintDisplayed;
 
         #endregion
 
@@ -61,6 +61,12 @@ namespace Com.MyCompany.MyGame
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
+
+            //Rough Hint Array String Addition
+            hintList[0] = "Look at the enviorment on other players screen, it will give you clues";
+            hintList[1] = "Dont be afraid to look at other players screen";
+            hintList[2] = "Dont stand still for too long, players are on the look out";
+            hintList[3] = "Let other players fight to reveal their positions";
         }
 
 
@@ -77,7 +83,10 @@ namespace Com.MyCompany.MyGame
 
         #endregion
 
-
+        public void TestHint()
+        {
+            Debug.Log(hintList[Random.Range(0, hintList.Length)]);
+        }
         #region Public Methods
 
 
@@ -92,7 +101,7 @@ namespace Com.MyCompany.MyGame
             hintLabel.SetActive(true);
             controlPanel.SetActive(false);
 
-            hintDisplayed = hintList[Random.Range(0, hintList.Length)];
+            hintDisplayed.text = hintList[Random.Range(0, hintList.Length)];
 
             if (PhotonNetwork.IsConnected)
             {

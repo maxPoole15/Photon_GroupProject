@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028346, g: 0.22571373, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1338,12 +1338,7 @@ MonoBehaviour:
   controlPanel: {fileID: 1859903684}
   progressLabel: {fileID: 1815517733}
   hintLabel: {fileID: 489791905}
-  hintList:
-  - {fileID: 3385902950116364112, guid: e05a1ab3cbdf8794e848ba1fac81c46a, type: 3}
-  - {fileID: 4855366127883929468, guid: 62ae86bf3ca94d44b8a051cec62191a2, type: 3}
-  - {fileID: 8243976521367032972, guid: 430913061935dc544b3be52502e57355, type: 3}
-  - {fileID: 3442819514736785014, guid: fd96c2d14154ec54a911b773b94c935d, type: 3}
-  hintDisplayed: {fileID: 101732489}
+  hintDisplayed: {fileID: 101732491}
 --- !u!1 &1657621452
 GameObject:
   m_ObjectHideFlags: 0
