@@ -15,12 +15,12 @@ namespace Com.MyCompany.MyGame
 
         [Tooltip("The distance in the local x-z plane to the target")]
         [SerializeField]
-        private float distance = 7.0f;
+        private float distance = 0.2f;
 
 
         [Tooltip("The height we want the camera to be above the target")]
         [SerializeField]
-        private float height = 3.0f;
+        private float height = 2.0f;
 
 
         [Tooltip("Allow the camera to be offseted vertically from the target, for example giving more view of the sceneray and less ground.")]
@@ -141,7 +141,6 @@ namespace Com.MyCompany.MyGame
 
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
 
-
             cameraTransform.LookAt(this.transform.position + centerOffset);
 			
 			for(int i = 0; i < cameras.Length; i++)
@@ -158,7 +157,6 @@ namespace Com.MyCompany.MyGame
 
 
             cameraTransform.position = this.transform.position + this.transform.TransformVector(cameraOffset);
-
 
             cameraTransform.LookAt(this.transform.position + centerOffset);
 			

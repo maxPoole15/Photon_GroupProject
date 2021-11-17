@@ -962,7 +962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965cf76fc33c6e9488c2aa422600e716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 4
+  distance: 0.2
   height: 2
   centerOffset: {x: 0, y: 2, z: 0}
   followOnStart: 0
