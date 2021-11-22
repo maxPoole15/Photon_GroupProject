@@ -20,13 +20,13 @@ namespace Com.MyCompany.MyGame
             if (stream.IsWriting)
             {
                 // We own this player: send the others our data
-                stream.SendNext(IsFiring);
+                stream.SendNext(shooting);
                 stream.SendNext(Health);
             }
             else
             {
                 // Network player, receive data
-                this.IsFiring = (bool)stream.ReceiveNext();
+                this.shooting = (bool)stream.ReceiveNext();
                 this.Health = (float)stream.ReceiveNext();
             }
         }
@@ -146,12 +146,11 @@ namespace Com.MyCompany.MyGame
                 ProcessInputs();
             }
 
-//DISABLE FOR NOW
             // trigger Beams active state
-            /*if (beams != null && IsFiring != beams.activeInHierarchy)
+            if (beams != null && shooting != beams.activeInHierarchy)
             {
-                beams.SetActive(IsFiring);
-            }*/
+                beams.SetActive(shooting);
+            }
 
             if (photonView.IsMine)
             {
@@ -196,7 +195,7 @@ namespace Com.MyCompany.MyGame
                 return;
             }
             // we slowly affect health when beam is constantly hitting us, so player has to move to prevent death.
-            Health -= 0.1f * Time.deltaTime;
+            Health -= 1f;
         }
 
         #endregion
@@ -206,9 +205,21 @@ namespace Com.MyCompany.MyGame
         /// <summary>
         /// Processes the inputs. Maintain a flag representing when the user is pressing Fire.
         /// </summary>
+        /// 
+        private bool shooting = false;
+        private bool reloading = false;
+
+        private float timeSinceShot = 0f;
+        private float timeUntilShot = 5f;
+
+        public LayerMask wallMask;
+        public LayerMask playerMask;
         void ProcessInputs()
         {
-            if (Input.GetButtonDown("Fire1"))
+
+            // OLD SHOOTING
+
+            /*if (Input.GetButtonDown("Fire1"))
             {
                 if (!IsFiring)
                 {
@@ -221,10 +232,64 @@ namespace Com.MyCompany.MyGame
                 {
                     IsFiring = false;
                 }
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
+            }*/
+
+            // NEW SHOOTING
+
+            Debug.DrawRay(transform.position, transform.forward);
+
+            if (reloading)
             {
-                transform.Translate(Vector3.up * 260 * Time.deltaTime, Space.World);
+                shooting = false;
+                timeSinceShot = timeSinceShot + Time.deltaTime;
+                if (timeSinceShot >= timeUntilShot)
+                {
+                    reloading = false;
+                    timeSinceShot = 0f;
+                }
+            }
+            if (Input.GetMouseButtonDown(0) && !reloading)
+            {
+                shooting = true;
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                shooting = false;
+            }
+
+            if (shooting && !reloading)
+            {
+                Debug.DrawRay(transform.position, transform.forward);
+
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                //Ray ray = new Ray(transform.position, transform.forward);
+
+                if (Physics.Raycast(ray, out hit, 500, playerMask, QueryTriggerInteraction.Ignore))
+                {
+                    //Player was hit by raycast
+                    Debug.Log("Might have hit a player");
+
+                    GameObject playerHit = hit.collider.gameObject;
+                    Vector3 dist = playerHit.transform.position - transform.position;
+
+                    Ray ray2 = new Ray(transform.position, dist);
+                    if (Physics.Raycast(ray, out hit, 500, wallMask, QueryTriggerInteraction.Ignore))
+                    {
+                        //Hit a wall first
+                        Debug.Log("Hit a wall first");
+                    }
+                    else
+                    {
+                        //Hit a player first
+                        Debug.Log("Hit a Player");
+
+                        //Kill the player here
+                    }
+                }
+
+                //Reload starts whether you hit anything or not
+                reloading = true;
             }
         }
 
