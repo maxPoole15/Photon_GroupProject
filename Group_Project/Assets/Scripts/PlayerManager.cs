@@ -124,7 +124,7 @@ namespace Com.MyCompany.MyGame
 
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
 
-            if (PlayerUiPrefab != null)
+            /*if (PlayerUiPrefab != null)
             {
                 GameObject _uiGo = Instantiate(PlayerUiPrefab);
                 _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
@@ -132,7 +132,7 @@ namespace Com.MyCompany.MyGame
             else
             {
                 Debug.LogWarning("<Color=Red><a>Missing</a></Color> PlayerUiPrefab reference on player Prefab.", this);
-            }
+            }*/
         }
 
         /// <summary>
@@ -221,6 +221,10 @@ namespace Com.MyCompany.MyGame
                 {
                     IsFiring = false;
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                transform.Translate(Vector3.up * 260 * Time.deltaTime, Space.World);
             }
         }
 

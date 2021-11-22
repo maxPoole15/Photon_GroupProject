@@ -892,8 +892,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2514624623247672127}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.000000015742, y: 0.044, z: 0.058192}
+  m_LocalScale: {x: 0.7358982, y: 0.7358982, z: 0.7358982}
   m_Children:
   - {fileID: 2514624623248105339}
   - {fileID: 2514624623248105341}
@@ -949,7 +949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ce5a1d80e5c8c46978364c807ecc35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  directionDampTime: 0.25
+  directionDampTime: 1
 --- !u!114 &67712740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -963,10 +963,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 0.2
-  height: 2
-  centerOffset: {x: 0, y: 2, z: 0}
+  height: 1.6
+  centerOffset: {x: 0, y: 1.19, z: 0}
   followOnStart: 0
-  smoothSpeed: 9
+  smoothSpeed: 5
   cameras: []
   players: []
   pv: {fileID: 0}
