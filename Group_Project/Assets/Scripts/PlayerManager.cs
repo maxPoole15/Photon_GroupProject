@@ -146,7 +146,6 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
-            Debug.Log(Health + "   " + isDead);
             if (photonView.IsMine && !isDead)
             {
                 

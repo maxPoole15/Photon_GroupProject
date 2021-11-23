@@ -54,6 +54,7 @@ namespace Com.MyCompany.MyGame
 
 
 		public Camera[] cameras;
+        private Camera cam;
 	
 		public List<GameObject> players;
 		
@@ -83,8 +84,7 @@ namespace Com.MyCompany.MyGame
 					players.Add(player);
 				}
 			}
-
-            //Camera.main.rect = new Rect(500f, 0f, 1000f, Screen.height / 2);
+            Debug.Log(cameras.Length);
         }
 
 
@@ -145,10 +145,24 @@ namespace Com.MyCompany.MyGame
 
             cameraTransform.LookAt(this.transform.position + centerOffset);
 
-            for (int i = 0; i < cameras.Length; i++)
-			{
-				cameras[i].transform.position = Vector3.Lerp(cameras[i].transform.position, players[i].transform.position + players[i].transform.TransformVector(cameraOffset),smoothSpeed * Time.deltaTime);
-			}
+            for (int i = 0; i <= cameras.Length; i++)
+            {
+                if (i == 1)
+                {
+                    if (players.Count > 1)
+                        cameras[i].transform.position = players[i - 1].transform.position + players[i].transform.TransformVector(cameraOffset);
+                }
+                else if (i == 2)
+                {
+                    if (players.Count > 2)
+                        cameras[i].transform.position = players[i - 1].transform.position + players[i].transform.TransformVector(cameraOffset);
+                }
+                else if (i == 3)
+                {
+                    if (players.Count > 3)
+                        cameras[i].transform.position = players[i - 1].transform.position + players[i].transform.TransformVector(cameraOffset);
+                }
+            }
         }
 
 
@@ -164,16 +178,30 @@ namespace Com.MyCompany.MyGame
 			
 			for(int i = 0; i <= cameras.Length; i++)
 			{
-				cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 if(i == 0)
-                    cameras[i].rect = new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2);
-                else if(i==1)
-                    cameras[i].rect = new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2);
-                else if(i==2)
-                    cameras[i].rect = new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2);
+                {
+                    cameras[i].rect = new Rect(0f, .5f, .5f, .5f);
+                }
+                else if(i == 1)
+                {
+                    cameras[i].rect = new Rect(.5f, .5f, .5f, .5f);
+                    if(players.Count > 1)
+                        cameras[i].transform.position = players[i - 1].transform.position + players[i].transform.TransformVector(cameraOffset);
+                }
+                else if (i == 2)
+                {
+                    cameras[i].rect = new Rect(0f, 0f, .5f, .5f);
+                    if (players.Count > 2)
+                        cameras[i].transform.position = players[i - 1].transform.position + players[i].transform.TransformVector(cameraOffset);
+                }
+                else
+                {
+                    cameras[i].rect = new Rect(.5f, 0f, .5f, .5f);
+                    if (players.Count > 3)
+                        cameras[i].transform.position = players[i - 1].transform.position + players[i].transform.TransformVector(cameraOffset);
+                }
             }
-            Camera.main.rect = new Rect(500f, 0f, 1000f, Screen.height / 2);
-
+            
             Debug.Log(Camera.main.rect);
 
         }
