@@ -45,6 +45,10 @@ namespace Com.MyCompany.MyGame
         [SerializeField]
         public GameObject PlayerUiPrefab;
 
+        public GameObject DeadScreen;
+
+        private bool isDead;
+        Canvas canvas;
         #endregion
 
 
@@ -53,8 +57,6 @@ namespace Com.MyCompany.MyGame
         [Tooltip("The Beams GameObject to control")]
         [SerializeField]
         private GameObject beams;
-        //True, when the user is firing
-        bool IsFiring;
         #endregion
 
         #region Private Methids
@@ -73,13 +75,15 @@ namespace Com.MyCompany.MyGame
         }
         void CalledOnLevelWasLoaded(int level)
         {
+            
             // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
             if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
             {
                 transform.position = new Vector3(0f, 5f, 0f);
             }
-            GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
-            _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
+            //GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
+            //_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
+            canvas = GetComponent<Canvas>();
         }
 
         /// <summary>
@@ -99,6 +103,7 @@ namespace Com.MyCompany.MyGame
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
             if (photonView.IsMine)
             {
+                
                 PlayerManager.LocalPlayerInstance = this.gameObject;
             }
             // #Critical
@@ -108,7 +113,8 @@ namespace Com.MyCompany.MyGame
         void Start()
         {
             CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
-
+            DeadScreen = GameObject.Find("DeadScreen");
+            DeadScreen.SetActive(false);
 
             if (_cameraWork != null)
             {
@@ -140,26 +146,29 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
-
-            if (photonView.IsMine)
+            Debug.Log(Health + "   " + isDead);
+            if (photonView.IsMine && !isDead)
             {
-                ProcessInputs();
-            }
-
-            // trigger Beams active state
-            if (beams != null && shooting != beams.activeInHierarchy)
-            {
-                beams.SetActive(shooting);
-            }
-
-            if (photonView.IsMine)
-            {
-                ProcessInputs();
-                if (Health <= 0f)
+                
+                // trigger Beams active state
+                if (beams != null && shooting != beams.activeInHierarchy)
                 {
-                    GameManager.Instance.LeaveRoom();
+                    beams.SetActive(shooting);
                 }
+                ProcessInputs();
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Respawn();
+            }
+        }
+        public void Respawn()
+        {
+            isDead = false;
+            Health = 1f;
+            DeadScreen = GameObject.Find("DeadScreen");
+            DeadScreen.SetActive(false);
+            reloading = false;
         }
 
         void OnTriggerEnter(Collider other)
@@ -168,20 +177,24 @@ namespace Com.MyCompany.MyGame
             {
                 return;
             }
+            
             // We are only interested in Beamers
             // we should be using tags but for the sake of distribution, let's simply check by name.
             if (!other.name.Contains("Beam"))
             {
                 return;
             }
-            Health -= 0.1f;
+            isDead = true;
+            Health -= 1f;
+            beams.SetActive(false);
+            DeadScreen.SetActive(true);
         }
         /// <summary>
         /// MonoBehaviour method called once per frame for every Collider 'other' that is touching the trigger.
         /// We're going to affect health while the beams are touching the player
         /// </summary>
         /// <param name="other">Other.</param>
-        void OnTriggerStay(Collider other)
+        /*void OnTriggerStay(Collider other)
         {
             // we dont' do anything if we are not the local player.
             if (!photonView.IsMine)
@@ -194,9 +207,7 @@ namespace Com.MyCompany.MyGame
             {
                 return;
             }
-            // we slowly affect health when beam is constantly hitting us, so player has to move to prevent death.
-            Health -= 1f;
-        }
+        }*/
 
         #endregion
 
@@ -236,61 +247,65 @@ namespace Com.MyCompany.MyGame
 
             // NEW SHOOTING
 
-            Debug.DrawRay(transform.position, transform.forward);
-
-            if (reloading)
-            {
-                shooting = false;
-                timeSinceShot = timeSinceShot + Time.deltaTime;
-                if (timeSinceShot >= timeUntilShot)
-                {
-                    reloading = false;
-                    timeSinceShot = 0f;
-                }
-            }
-            if (Input.GetMouseButtonDown(0) && !reloading)
-            {
-                shooting = true;
-            }
-            if (Input.GetMouseButtonUp(0))
-            {
-                shooting = false;
-            }
-
-            if (shooting && !reloading)
+            if (!isDead && photonView.IsMine)
             {
                 Debug.DrawRay(transform.position, transform.forward);
 
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                //Ray ray = new Ray(transform.position, transform.forward);
-
-                if (Physics.Raycast(ray, out hit, 500, playerMask, QueryTriggerInteraction.Ignore))
+                if (reloading)
                 {
-                    //Player was hit by raycast
-                    Debug.Log("Might have hit a player");
-
-                    GameObject playerHit = hit.collider.gameObject;
-                    Vector3 dist = playerHit.transform.position - transform.position;
-
-                    Ray ray2 = new Ray(transform.position, dist);
-                    if (Physics.Raycast(ray, out hit, 500, wallMask, QueryTriggerInteraction.Ignore))
+                    shooting = false;
+                    timeSinceShot = timeSinceShot + Time.deltaTime;
+                    if (timeSinceShot >= timeUntilShot)
                     {
-                        //Hit a wall first
-                        Debug.Log("Hit a wall first");
-                    }
-                    else
-                    {
-                        //Hit a player first
-                        Debug.Log("Hit a Player");
-
-                        //Kill the player here
+                        reloading = false;
+                        timeSinceShot = 0f;
                     }
                 }
+                if (Input.GetMouseButtonDown(0) && !reloading)
+                {
+                    shooting = true;
+                }
+                if (Input.GetMouseButtonUp(0))
+                {
+                    shooting = false;
+                }
 
-                //Reload starts whether you hit anything or not
-                reloading = true;
+                if (shooting && !reloading)
+                {
+                    Debug.DrawRay(transform.position, transform.forward);
+
+                    RaycastHit hit;
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    //Ray ray = new Ray(transform.position, transform.forward);
+
+                    if (Physics.Raycast(ray, out hit, 500, playerMask, QueryTriggerInteraction.Ignore))
+                    {
+                        //Player was hit by raycast
+                        Debug.Log("Might have hit a player");
+
+                        GameObject playerHit = hit.collider.gameObject;
+                        Vector3 dist = playerHit.transform.position - transform.position;
+
+                        Ray ray2 = new Ray(transform.position, dist);
+                        if (Physics.Raycast(ray, out hit, 500, wallMask, QueryTriggerInteraction.Ignore))
+                        {
+                            //Hit a wall first
+                            Debug.Log("Hit a wall first");
+                        }
+                        else
+                        {
+                            //Hit a player first
+                            Debug.Log("Hit a Player");
+
+                            //Kill the player here
+                        }
+                    }
+
+                    //Reload starts whether you hit anything or not
+                    reloading = true;
+                }
             }
+            
         }
 
         public override void OnDisable()

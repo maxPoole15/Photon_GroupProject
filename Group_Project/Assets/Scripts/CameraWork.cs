@@ -53,7 +53,7 @@ namespace Com.MyCompany.MyGame
         #endregion
 
 
-		public GameObject[] cameras;
+		public Camera[] cameras;
 	
 		public List<GameObject> players;
 		
@@ -72,9 +72,9 @@ namespace Com.MyCompany.MyGame
             {
                 OnStartFollowing();
             }
-			cameras = GameObject.FindGameObjectsWithTag("OtherCam");
-			//players = (GameObject.FindGameObjectsWithTag("Player"));
-			
+            cameras = Camera.allCameras;
+            //cameras = GameObject.FindGameObjectsWithTag("OtherCam");
+
 			foreach(GameObject player in GameObject.FindGameObjectsWithTag("Player"))
 			{
 				pv = player.GetComponent<PhotonView>();
@@ -83,6 +83,8 @@ namespace Com.MyCompany.MyGame
 					players.Add(player);
 				}
 			}
+
+            //Camera.main.rect = new Rect(500f, 0f, 1000f, Screen.height / 2);
         }
 
 
@@ -142,8 +144,8 @@ namespace Com.MyCompany.MyGame
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
 
             cameraTransform.LookAt(this.transform.position + centerOffset);
-			
-			for(int i = 0; i < cameras.Length; i++)
+
+            for (int i = 0; i < cameras.Length; i++)
 			{
 				cameras[i].transform.position = Vector3.Lerp(cameras[i].transform.position, players[i].transform.position + players[i].transform.TransformVector(cameraOffset),smoothSpeed * Time.deltaTime);
 			}
@@ -160,10 +162,20 @@ namespace Com.MyCompany.MyGame
 
             cameraTransform.LookAt(this.transform.position + centerOffset);
 			
-			for(int i = 0; i < cameras.Length; i++)
+			for(int i = 0; i <= cameras.Length; i++)
 			{
 				cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
-			}
+                if(i == 0)
+                    cameras[i].rect = new Rect(Screen.width / 2, 0, Screen.width / 2, Screen.height / 2);
+                else if(i==1)
+                    cameras[i].rect = new Rect(0, Screen.height / 2, Screen.width / 2, Screen.height / 2);
+                else if(i==2)
+                    cameras[i].rect = new Rect(Screen.width / 2, Screen.height / 2, Screen.width / 2, Screen.height / 2);
+            }
+            Camera.main.rect = new Rect(500f, 0f, 1000f, Screen.height / 2);
+
+            Debug.Log(Camera.main.rect);
+
         }
         #endregion
     }
