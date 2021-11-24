@@ -45,9 +45,9 @@ namespace Com.MyCompany.MyGame
         [SerializeField]
         public GameObject PlayerUiPrefab;*/
 
-        private GameObject DeadScreen;
+        public GameObject deathScreen;
 
-        private bool isDead = true;
+        private bool isDead = false;
         Canvas canvas;
         #endregion
 
@@ -75,12 +75,13 @@ namespace Com.MyCompany.MyGame
         }
         void CalledOnLevelWasLoaded(int level)
         {
-            DeadScreen = GameObject.Find("DeadScreen");
+            //DeadScreen = GameObject.Find("DeadScreen");
             // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
             if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
             {
                 transform.position = new Vector3(0f, 5f, 0f);
             }
+            
             //GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
             //_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
             
@@ -143,10 +144,8 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
-            Debug.Log(isDead);
             if (photonView.IsMine && !isDead)
             {
-                
                 // trigger Beams active state
                 if (beams != null && shooting != beams.activeInHierarchy)
                 {
@@ -156,10 +155,11 @@ namespace Com.MyCompany.MyGame
             }
             if (isDead)
             {
-                DeadScreen.SetActive(true);
+                deathScreen.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.R))
                 {
                     Respawn();
+                    deathScreen.SetActive(false);
                 }
             }
         }
@@ -168,7 +168,6 @@ namespace Com.MyCompany.MyGame
             isDead = false;
             Health = 1f;
             reloading = false;
-            DeadScreen.SetActive(false);
         }
 
         void OnTriggerEnter(Collider other)
