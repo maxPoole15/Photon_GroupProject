@@ -136,7 +136,7 @@ namespace Com.MyCompany.MyGame
 
             for (int i = 0; i < players.Count; i++)
             {
-                cameras[i + 1].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 /*if (i == 1)
                 {
                     if (players.Count > 1)
@@ -161,11 +161,7 @@ namespace Com.MyCompany.MyGame
             cameras = Camera.allCameras;
             foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
             {
-                pv = player.GetComponent<PhotonView>();
-                if (!pv.IsMine)
-                {
-                    players.Add(player);
-                }
+                players.Add(player);
             }
             cameraOffset.z = -distance;
             cameraOffset.y = height;
@@ -185,24 +181,21 @@ namespace Com.MyCompany.MyGame
                 {
                     cameras[i].rect = new Rect(.5f, .5f, .5f, .5f);
                     if(players.Count > 1)
-                        cameras[i].transform.position = players[i - 1].transform.position + players[i - 1].transform.TransformVector(cameraOffset);
+                        cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 }
                 else if (i == 2)
                 {
                     cameras[i].rect = new Rect(0f, 0f, .5f, .5f);
                     if (players.Count > 2)
-                        cameras[i].transform.position = players[i - 1].transform.position + players[i - 1].transform.TransformVector(cameraOffset);
+                        cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 }
                 else
                 {
                     cameras[i].rect = new Rect(.5f, 0f, .5f, .5f);
                     if (players.Count > 3)
-                        cameras[i].transform.position = players[i - 1].transform.position + players[i - 1].transform.TransformVector(cameraOffset);
+                        cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 }
             }
-            
-            //Debug.Log(Camera.main.rect);
-
         }
         #endregion
     }

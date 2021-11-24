@@ -41,13 +41,13 @@ namespace Com.MyCompany.MyGame
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
 
-        [Tooltip("The Player's UI GameObject Prefab")]
+        /*[Tooltip("The Player's UI GameObject Prefab")]
         [SerializeField]
-        public GameObject PlayerUiPrefab;
+        public GameObject PlayerUiPrefab;*/
 
-        public GameObject DeadScreen;
+        private GameObject DeadScreen;
 
-        private bool isDead;
+        private bool isDead = true;
         Canvas canvas;
         #endregion
 
@@ -75,7 +75,7 @@ namespace Com.MyCompany.MyGame
         }
         void CalledOnLevelWasLoaded(int level)
         {
-            
+            DeadScreen = GameObject.Find("DeadScreen");
             // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
             if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
             {
@@ -83,7 +83,7 @@ namespace Com.MyCompany.MyGame
             }
             //GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
             //_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
-            canvas = GetComponent<Canvas>();
+            
         }
 
         /// <summary>
@@ -112,9 +112,7 @@ namespace Com.MyCompany.MyGame
         }
         void Start()
         {
-            CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
-            DeadScreen = GameObject.Find("DeadScreen");
-            DeadScreen.SetActive(false);
+            CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>(); 
 
             if (_cameraWork != null)
             {
@@ -129,7 +127,6 @@ namespace Com.MyCompany.MyGame
             }
 
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
-
             /*if (PlayerUiPrefab != null)
             {
                 GameObject _uiGo = Instantiate(PlayerUiPrefab);
@@ -146,6 +143,7 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
+            Debug.Log(isDead);
             if (photonView.IsMine && !isDead)
             {
                 
@@ -156,18 +154,21 @@ namespace Com.MyCompany.MyGame
                 }
                 ProcessInputs();
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            if (isDead)
             {
-                Respawn();
+                DeadScreen.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Respawn();
+                }
             }
         }
         public void Respawn()
         {
             isDead = false;
             Health = 1f;
-            DeadScreen = GameObject.Find("DeadScreen");
-            DeadScreen.SetActive(false);
             reloading = false;
+            DeadScreen.SetActive(false);
         }
 
         void OnTriggerEnter(Collider other)
@@ -186,7 +187,6 @@ namespace Com.MyCompany.MyGame
             isDead = true;
             Health -= 1f;
             beams.SetActive(false);
-            DeadScreen.SetActive(true);
         }
         /// <summary>
         /// MonoBehaviour method called once per frame for every Collider 'other' that is touching the trigger.
