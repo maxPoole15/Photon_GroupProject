@@ -56,7 +56,7 @@ namespace Com.MyCompany.MyGame
 		public Camera[] cameras;
         //private Camera cam;
 	
-		public List<GameObject> players;
+		public GameObject[] players;
 		
 		public PhotonView pv;
 
@@ -130,14 +130,15 @@ namespace Com.MyCompany.MyGame
             cameraOffset.y = height;
 
 
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
+            //cameraTransform.position = Vector3.Lerp(cameraTransform.position, this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
 
-            cameraTransform.LookAt(this.transform.position + centerOffset);
+            //cameraTransform.LookAt(this.transform.position + centerOffset);
 
-            for (int i = 0; i < players.Count; i++)
+            for (int i = 0; i < players.Length; i++)
             {
-                cameras[i].transform.parent = players[i].transform;
-                //cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                //cameras[i].transform.parent = players[i].transform;
+                cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                cameras[i].transform.localRotation = players[i].transform.localRotation;
                 /*if (i == 1)
                 {
                     if (players.Count > 1)
@@ -160,10 +161,8 @@ namespace Com.MyCompany.MyGame
         void Cut()
         {
             cameras = Camera.allCameras;
-            foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
-            {
-                players.Add(player);
-            }
+            players = GameObject.FindGameObjectsWithTag("Player");
+
             cameraOffset.z = -distance;
             cameraOffset.y = height;
 
@@ -181,23 +180,24 @@ namespace Com.MyCompany.MyGame
                 else if(i == 1)
                 {
                     cameras[i].rect = new Rect(.5f, .5f, .5f, .5f);
-                    if (players.Count > 1)
-                        cameras[i].transform.parent = players[i].transform;
-                        //cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                    if (players.Length > 1)
+                        //cameras[i].transform.parent = players[i].transform;
+                        cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                    
                 }
                 else if (i == 2)
                 {
                     cameras[i].rect = new Rect(0f, 0f, .5f, .5f);
-                    if (players.Count > 2)
-                        cameras[i].transform.parent = players[i].transform;
-                        //cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                    if (players.Length > 2)
+                        //cameras[i].transform.parent = players[i].transform;
+                        cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 }
                 else
                 {
                     cameras[i].rect = new Rect(.5f, 0f, .5f, .5f);
-                    if (players.Count > 3)
-                        cameras[i].transform.parent = players[i].transform;
-                        //cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
+                    if (players.Length > 3)
+                        //cameras[i].transform.parent = players[i].transform;
+                        cameras[i].transform.position = players[i].transform.position + players[i].transform.TransformVector(cameraOffset);
                 }
             }
         }

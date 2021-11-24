@@ -183,9 +183,13 @@ namespace Com.MyCompany.MyGame
             {
                 return;
             }
-            isDead = true;
-            Health -= 1f;
-            beams.SetActive(false);
+            if(other.gameObject.tag == "Bullet")
+            {
+                isDead = true;
+                Health -= 1f;
+                beams.SetActive(false);
+            }
+            
         }
         /// <summary>
         /// MonoBehaviour method called once per frame for every Collider 'other' that is touching the trigger.
@@ -219,7 +223,7 @@ namespace Com.MyCompany.MyGame
         private bool reloading = false;
 
         private float timeSinceShot = 0f;
-        private float timeUntilShot = 5f;
+        private float timeUntilShot = 2f;
 
         public LayerMask wallMask;
         public LayerMask playerMask;

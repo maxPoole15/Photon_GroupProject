@@ -544,10 +544,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.5
     y: 0
-    width: 1
-    height: 1
+    width: 0.5
+    height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -878,10 +878,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.5
+    y: 0.5
+    width: 0.5
+    height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -916,6 +916,80 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 44.842003, z: 0}
+--- !u!1001 &551085002
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 964.4081
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 956.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16.215698
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751436, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751437, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: sounds.Array.data[0].volume
+      value: 0.023
+      objectReference: {fileID: 0}
+    - target: {fileID: 1071423937089751438, guid: f1cab5f9af3b4944aae72ee197748cab,
+        type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1cab5f9af3b4944aae72ee197748cab, type: 3}
 --- !u!1 &601799508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1723,8 +1797,8 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 1
-    height: 1
+    width: 0.5
+    height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -2570,9 +2644,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 1
-    height: 1
+    y: 0.5
+    width: 0.5
+    height: 0.5
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
