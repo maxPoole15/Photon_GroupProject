@@ -9,7 +9,7 @@ namespace Com.MyCompany.MyGame
         #region Private Fields
 
         [SerializeField]
-        private float directionDampTime = .25f;
+        private float directionDampTime = .1f;
         private Animator animator;
 
         #endregion
@@ -56,7 +56,7 @@ namespace Com.MyCompany.MyGame
                 v = 0;
             }
             animator.SetFloat("Speed", h * h + v * v);
-            animator.SetFloat("Direction", h, directionDampTime, Time.deltaTime);
+            animator.SetFloat("Direction", h);
         }
 
         #endregion

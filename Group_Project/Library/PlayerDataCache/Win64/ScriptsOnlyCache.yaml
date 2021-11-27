@@ -241,6 +241,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 90
       Script: {instanceID: 0}
     - Class: 91
@@ -263,6 +265,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12360}
     - Class: 114
       Script: {instanceID: 12830}
+    - Class: 114
+      Script: {instanceID: 12862}
     - Class: 114
       Script: {instanceID: 13014}
     - Class: 114
@@ -330,6 +334,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 90
       Script: {instanceID: 0}
     - Class: 91
@@ -352,6 +358,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12360}
     - Class: 114
       Script: {instanceID: 12830}
+    - Class: 114
+      Script: {instanceID: 12862}
     - Class: 114
       Script: {instanceID: 13014}
     - Class: 114
@@ -417,6 +425,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 90
       Script: {instanceID: 0}
     - Class: 91
@@ -439,6 +449,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12360}
     - Class: 114
       Script: {instanceID: 12830}
+    - Class: 114
+      Script: {instanceID: 12862}
     - Class: 114
       Script: {instanceID: 13014}
     - Class: 114
@@ -504,6 +516,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 90
       Script: {instanceID: 0}
     - Class: 91
@@ -526,6 +540,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 12360}
     - Class: 114
       Script: {instanceID: 12830}
+    - Class: 114
+      Script: {instanceID: 12862}
     - Class: 114
       Script: {instanceID: 13014}
     - Class: 114
@@ -1847,7 +1863,7 @@ ScriptsOnlyBuild:
     className: PlayerListEntry
   - hash:
       serializedVersion: 2
-      Hash: a40f1f2be616a45be10e6982db82b676
+      Hash: 2acc692472aea6f519b59c9da3a035c9
     assemblyName: Assembly-CSharp.dll
     namespaceName: Com.MyCompany.MyGame
     className: PlayerManager

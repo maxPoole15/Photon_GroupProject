@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 using Photon.Pun;
 
@@ -48,6 +49,10 @@ namespace Com.MyCompany.MyGame
         public GameObject deathScreen;
 
         private bool isDead = false;
+        public int deaths;
+        public Text deathCount;
+        public int kills;
+        public Text killCount;
         Canvas canvas;
         #endregion
 
@@ -75,16 +80,14 @@ namespace Com.MyCompany.MyGame
         }
         void CalledOnLevelWasLoaded(int level)
         {
-            //DeadScreen = GameObject.Find("DeadScreen");
             // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
             if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
             {
                 transform.position = new Vector3(0f, 5f, 0f);
             }
-            
-            //GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
-            //_uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
-            
+            killCount = GameObject.FindGameObjectWithTag("LocalPlayerKills").GetComponent<Text>();
+            deathCount = GameObject.FindGameObjectWithTag("LocalPlayerDeaths").GetComponent<Text>();
+
         }
 
         /// <summary>
@@ -104,8 +107,8 @@ namespace Com.MyCompany.MyGame
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
             if (photonView.IsMine)
             {
-                
                 PlayerManager.LocalPlayerInstance = this.gameObject;
+                
             }
             // #Critical
             // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
@@ -128,15 +131,6 @@ namespace Com.MyCompany.MyGame
             }
 
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
-            /*if (PlayerUiPrefab != null)
-            {
-                GameObject _uiGo = Instantiate(PlayerUiPrefab);
-                _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
-            }
-            else
-            {
-                Debug.LogWarning("<Color=Red><a>Missing</a></Color> PlayerUiPrefab reference on player Prefab.", this);
-            }*/
         }
 
         /// <summary>
@@ -144,28 +138,31 @@ namespace Com.MyCompany.MyGame
         /// </summary>
         void Update()
         {
-            if (photonView.IsMine && !isDead)
+            if (photonView.IsMine)
             {
-                // trigger Beams active state
-                if (beams != null && shooting != beams.activeInHierarchy)
-                {
-                    beams.SetActive(shooting);
-                }
                 ProcessInputs();
-            }
-            if (isDead)
-            {
-                deathScreen.SetActive(true);
-                if (Input.GetKeyDown(KeyCode.R))
+                if (isDead)
                 {
-                    Respawn();
-                    deathScreen.SetActive(false);
+                    deathScreen.SetActive(true);
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        Respawn();
+                    }
                 }
+                killCount.text = kills.ToString();
+                deathCount.text = deaths.ToString();
+            }
+            // trigger Beams active state
+            if (beams != null && shooting != beams.activeInHierarchy)
+            {
+                beams.SetActive(shooting);
             }
         }
         public void Respawn()
         {
+            Debug.Log("Respawning");
             isDead = false;
+            deathScreen.SetActive(false);
             Health = 1f;
             reloading = false;
         }
@@ -186,6 +183,7 @@ namespace Com.MyCompany.MyGame
             if(other.gameObject.tag == "Bullet")
             {
                 isDead = true;
+                deaths += 1;
                 Health -= 1f;
                 beams.SetActive(false);
             }
@@ -219,7 +217,7 @@ namespace Com.MyCompany.MyGame
         /// Processes the inputs. Maintain a flag representing when the user is pressing Fire.
         /// </summary>
         /// 
-        private bool shooting = false;
+        public bool shooting = false;
         private bool reloading = false;
 
         private float timeSinceShot = 0f;
@@ -249,65 +247,62 @@ namespace Com.MyCompany.MyGame
 
             // NEW SHOOTING
 
-            if (!isDead && photonView.IsMine)
+            Debug.DrawRay(transform.position, transform.forward);
+
+            if (reloading)
+            {
+                shooting = false;
+                timeSinceShot = timeSinceShot + Time.deltaTime;
+                if (timeSinceShot >= timeUntilShot)
+                {
+                    reloading = false;
+                    timeSinceShot = 0f;
+                }
+            }
+            if (Input.GetMouseButtonDown(0) && !reloading)
+            {
+                shooting = true;
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                shooting = false;
+            }
+
+            if (shooting && !reloading)
             {
                 Debug.DrawRay(transform.position, transform.forward);
 
-                if (reloading)
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                //Ray ray = new Ray(transform.position, transform.forward);
+
+                if (Physics.Raycast(ray, out hit, 500, playerMask, QueryTriggerInteraction.Ignore))
                 {
-                    shooting = false;
-                    timeSinceShot = timeSinceShot + Time.deltaTime;
-                    if (timeSinceShot >= timeUntilShot)
+                    //Player was hit by raycast
+                    Debug.Log("Might have hit a player");
+
+                    GameObject playerHit = hit.collider.gameObject;
+                    Vector3 dist = playerHit.transform.position - transform.position;
+
+                    Ray ray2 = new Ray(transform.position, dist);
+                    if (Physics.Raycast(ray, out hit, 500, wallMask, QueryTriggerInteraction.Ignore))
                     {
-                        reloading = false;
-                        timeSinceShot = 0f;
+                        //Hit a wall first
+                        Debug.Log("Hit a wall first");
+                    }
+                    else
+                    {
+                        //Hit a player first
+                        Debug.Log("Hit a Player");
+
+                        //Kill the player here
+                        kills += 1;
                     }
                 }
-                if (Input.GetMouseButtonDown(0) && !reloading)
-                {
-                    shooting = true;
-                }
-                if (Input.GetMouseButtonUp(0))
-                {
-                    shooting = false;
-                }
-
-                if (shooting && !reloading)
-                {
-                    Debug.DrawRay(transform.position, transform.forward);
-
-                    RaycastHit hit;
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    //Ray ray = new Ray(transform.position, transform.forward);
-
-                    if (Physics.Raycast(ray, out hit, 500, playerMask, QueryTriggerInteraction.Ignore))
-                    {
-                        //Player was hit by raycast
-                        Debug.Log("Might have hit a player");
-
-                        GameObject playerHit = hit.collider.gameObject;
-                        Vector3 dist = playerHit.transform.position - transform.position;
-
-                        Ray ray2 = new Ray(transform.position, dist);
-                        if (Physics.Raycast(ray, out hit, 500, wallMask, QueryTriggerInteraction.Ignore))
-                        {
-                            //Hit a wall first
-                            Debug.Log("Hit a wall first");
-                        }
-                        else
-                        {
-                            //Hit a player first
-                            Debug.Log("Hit a Player");
-
-                            //Kill the player here
-                        }
-                    }
-
-                    //Reload starts whether you hit anything or not
-                    reloading = true;
-                }
+                //Reload starts whether you hit anything or not
+                reloading = true;
             }
-            
+
         }
 
         public override void OnDisable()
